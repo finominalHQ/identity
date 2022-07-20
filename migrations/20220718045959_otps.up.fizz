@@ -1,0 +1,15 @@
+create_table("otps") {
+  t.Column("id", "varchar", {size: "36"})
+  t.Column("value", "varchar", {size: "6"})
+  t.Column("type", "varchar", {size: "26"})
+  t.Column("owner", "varchar", {size: "52"})
+  t.Column("used_at", "datetime", {"null": true})
+  t.Column("expired_at", "datetime", {"null": true})
+  t.Column("source", "varchar", {size: "52"})
+  t.Column("created_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP", {size: "6"})
+  t.Column("updated_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP", {size: "6"})
+  t.Column("deleted_at", "datetime", {size: "6"})
+  t.Column("user_id", "varchar", {size: "36"})
+  add_index("table_name", "id", {"unique": true})
+  add_index("table_name", "user_id", {})
+}

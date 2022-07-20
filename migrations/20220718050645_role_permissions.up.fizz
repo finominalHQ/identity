@@ -1,0 +1,11 @@
+create_table("role_permissions") {
+  t.Column("id", "varchar", {size: "36"})
+  t.Column("created_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP", {size: "6"})
+  t.Column("updated_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP", {size: "6"})
+  t.Column("deleted_at", "datetime", {size: "6"})
+  t.Column("type_id", "varchar", {size: "36"})
+  t.Column("role_id", "varchar", {size: "36"})
+  add_index("table_name", "id", {"unique": true})
+  add_index("table_name", "type_id", {})
+  add_index("table_name", "role_id", {})
+}
