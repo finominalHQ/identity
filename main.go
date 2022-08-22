@@ -4,7 +4,12 @@ import (
 	"log"
 
 	"identity/actions"
+	"identity/pkg/otp"
+	"identity/pkg/permission"
+	"identity/pkg/role"
+	"identity/pkg/role_permission"
 	"identity/pkg/user"
+	"identity/pkg/user_role"
 )
 
 // main is the starting point for your Buffalo application.
@@ -15,7 +20,13 @@ import (
 // application that is. :)
 func main() {
 	app := actions.App()
+	// app.Resource("/auth", auth.)
+	app.Resource("/otp", otp.OtpsResource{})
+	app.Resource("/permission", permission.PermissionsResource{})
+	app.Resource("/role", role.RolesResource{})
+	app.Resource("/role-permission", role_permission.RolePermissionsResource{})
 	app.Resource("/user", user.UsersResource{})
+	app.Resource("/user-role", user_role.UserRolesResource{})
 	if err := app.Serve(); err != nil {
 		log.Fatal(err)
 	}

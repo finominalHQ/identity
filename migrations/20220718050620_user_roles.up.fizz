@@ -1,11 +1,15 @@
 create_table("user_roles") {
-  t.Column("id", "varchar", {size: "36"})
-  t.Column("created_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP", {size: "6"})
-  t.Column("updated_at", "datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP", {size: "6"})
-  t.Column("deleted_at", "datetime", {size: "6"})
-  t.Column("type_id", "varchar", {size: "36"})
+  t.Column("id", "uuid", {primary: true})
+  t.Column("user_id", "varchar", {size: "36"})
   t.Column("role_id", "varchar", {size: "36"})
-  add_index("table_name", "id", {"unique": true})
-  add_index("table_name", "type_id", {})
-  add_index("table_name", "role_id", {})
+  t.Column("status", "varchar", {"size": "26", "null": true})
+  t.Timestamps()
+
+  add_index("user_roles", "id", {"unique": true})
+  add_index("user_roles", "user_id", {})
+  add_index("user_roles", "role_id", {})
+  add_index("user_roles", "status", {})
+  add_index("user_roles", "created_at", {})
+  add_index("user_roles", "updated_at", {})
+  add_index("user_roles", "deleted_at", {})
 }

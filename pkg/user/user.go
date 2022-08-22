@@ -4,16 +4,46 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/gobuffalo/nulls"
 	"github.com/gobuffalo/pop/v6"
 	"github.com/gobuffalo/validate/v3"
 	"github.com/gofrs/uuid"
 )
 
+type IdType string
+
+const (
+	Email IdType = "Email"
+	Phone IdType = "Phone"
+)
+
+type UserType string
+
+const (
+	Person  UserType = "Person"
+	Machine UserType = "Machine"
+)
+
+type UserStatus string
+
+const (
+	Active   UserStatus = "Active"
+	Inactive UserStatus = "Inactive"
+)
+
 // User is used by pop to map your users database table to your go code.
 type User struct {
-	ID        uuid.UUID `json:"id" db:"id"`
-	CreatedAt time.Time `json:"created_at" db:"created_at"`
-	UpdatedAt time.Time `json:"updated_at" db:"updated_at"`
+	ID          uuid.UUID    `json:"id" db:"id"`
+	IdNumber    string       `json:"id_number" db:"id_number"`
+	IdType      IdType       `json:"id_type" db:"id_type"`
+	Password    string       `json:"password" db:"password"`
+	Type        UserType     `json:"type" db:"type"`
+	Source      nulls.String `json:"source" db:"source"`
+	Status      UserStatus   `json:"status" db:"status"`
+	SuspendedAt time.Time    `json:"suspended_at" db:"suspended_at"`
+	ClosedAt    time.Time    `json:"closed_at" db:"closed_at"`
+	CreatedAt   time.Time    `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time    `json:"updated_at" db:"updated_at"`
 }
 
 // String is not required by pop and may be deleted

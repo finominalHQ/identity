@@ -1,4 +1,4 @@
-package user
+package role
 
 import (
 	"fmt"
@@ -17,72 +17,72 @@ import (
 // edit this file.
 
 // Following naming logic is implemented in Buffalo:
-// Model: Singular (User)
-// DB Table: Plural (users)
-// Resource: Plural (Users)
-// Path: Plural (/users)
-// View Template Folder: Plural (/templates/users/)
+// Model: Singular (Role)
+// DB Table: Plural (roles)
+// Resource: Plural (Roles)
+// Path: Plural (/roles)
+// View Template Folder: Plural (/templates/roles/)
 
-// UsersResource is the resource for the User model
-type UsersResource struct {
+// RolesResource is the resource for the Role model
+type RolesResource struct {
 	buffalo.Resource
 }
 
-// List gets all Users. This function is mapped to the path
-// GET /users
-func (v UsersResource) List(c buffalo.Context) error {
+// List gets all Roles. This function is mapped to the path
+// GET /roles
+func (v RolesResource) List(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	users := &Users{}
+	roles := &Roles{}
 
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
 	q := tx.PaginateFromParams(c.Params())
 
-	// Retrieve all Users from the DB
-	if err := q.All(users); err != nil {
+	// Retrieve all Roles from the DB
+	if err := q.All(roles); err != nil {
 		return err
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(200, actions.R.JSON(users))
+		return c.Render(200, actions.R.JSON(roles))
 	}).Respond(c)
 }
 
-// Show gets the data for one User. This function is mapped to
-// the path GET /users/{user_id}
-func (v UsersResource) Show(c buffalo.Context) error {
+// Show gets the data for one Role. This function is mapped to
+// the path GET /roles/{role_id}
+func (v RolesResource) Show(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Role
+	role := &Role{}
 
-	// To find the User the parameter user_id is used.
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	// To find the Role the parameter role_id is used.
+	if err := tx.Find(role, c.Param("role_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(200, actions.R.JSON(user))
+		return c.Render(200, actions.R.JSON(role))
 	}).Respond(c)
 }
 
-// Create adds a User to the DB. This function is mapped to the
-// path POST /users
-func (v UsersResource) Create(c buffalo.Context) error {
-	// Allocate an empty User
-	user := &User{}
+// Create adds a Role to the DB. This function is mapped to the
+// path POST /roles
+func (v RolesResource) Create(c buffalo.Context) error {
+	// Allocate an empty Role
+	role := &Role{}
 
-	// Bind user to the html form elements
-	if err := c.Bind(user); err != nil {
+	// Bind role to the html form elements
+	if err := c.Bind(role); err != nil {
 		return err
 	}
 
@@ -93,7 +93,7 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	}
 
 	// Validate the data from the html form
-	verrs, err := tx.ValidateAndCreate(user)
+	verrs, err := tx.ValidateAndCreate(role)
 	if err != nil {
 		return err
 	}
@@ -105,32 +105,32 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusCreated, actions.R.JSON(user))
+		return c.Render(http.StatusCreated, actions.R.JSON(role))
 	}).Respond(c)
 }
 
-// Update changes a User in the DB. This function is mapped to
-// the path PUT /users/{user_id}
-func (v UsersResource) Update(c buffalo.Context) error {
+// Update changes a Role in the DB. This function is mapped to
+// the path PUT /roles/{role_id}
+func (v RolesResource) Update(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Role
+	role := &Role{}
 
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	if err := tx.Find(role, c.Param("role_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
-	// Bind User to the html form elements
-	if err := c.Bind(user); err != nil {
+	// Bind Role to the html form elements
+	if err := c.Bind(role); err != nil {
 		return err
 	}
 
-	verrs, err := tx.ValidateAndUpdate(user)
+	verrs, err := tx.ValidateAndUpdate(role)
 	if err != nil {
 		return err
 	}
@@ -142,32 +142,32 @@ func (v UsersResource) Update(c buffalo.Context) error {
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusOK, actions.R.JSON(user))
+		return c.Render(http.StatusOK, actions.R.JSON(role))
 	}).Respond(c)
 }
 
-// Destroy deletes a User from the DB. This function is mapped
-// to the path DELETE /users/{user_id}
-func (v UsersResource) Destroy(c buffalo.Context) error {
+// Destroy deletes a Role from the DB. This function is mapped
+// to the path DELETE /roles/{role_id}
+func (v RolesResource) Destroy(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Role
+	role := &Role{}
 
-	// To find the User the parameter user_id is used.
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	// To find the Role the parameter role_id is used.
+	if err := tx.Find(role, c.Param("role_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
-	if err := tx.Destroy(user); err != nil {
+	if err := tx.Destroy(role); err != nil {
 		return err
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusOK, actions.R.JSON(user))
+		return c.Render(http.StatusOK, actions.R.JSON(role))
 	}).Respond(c)
 }

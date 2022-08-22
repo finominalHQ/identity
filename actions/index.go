@@ -3,6 +3,7 @@ package actions
 import (
 	"identity/locales"
 	"identity/models"
+	"identity/pkg/middlewares"
 	"net/http"
 
 	"github.com/gobuffalo/buffalo"
@@ -64,6 +65,9 @@ func App() *buffalo.App {
 
 		// Set the request content type to JSON
 		app.Use(contenttype.Set("application/json"))
+
+		// check for jwt token
+		app.Use(middlewares.VerifyJWT())
 
 		// Wraps each request in a transaction.
 		//   c.Value("tx").(*pop.Connection)

@@ -1,4 +1,4 @@
-package user
+package otp
 
 import (
 	"fmt"
@@ -17,72 +17,72 @@ import (
 // edit this file.
 
 // Following naming logic is implemented in Buffalo:
-// Model: Singular (User)
-// DB Table: Plural (users)
-// Resource: Plural (Users)
-// Path: Plural (/users)
-// View Template Folder: Plural (/templates/users/)
+// Model: Singular (Otp)
+// DB Table: Plural (otps)
+// Resource: Plural (Otps)
+// Path: Plural (/otps)
+// View Template Folder: Plural (/templates/otps/)
 
-// UsersResource is the resource for the User model
-type UsersResource struct {
+// OtpsResource is the resource for the Otp model
+type OtpsResource struct {
 	buffalo.Resource
 }
 
-// List gets all Users. This function is mapped to the path
-// GET /users
-func (v UsersResource) List(c buffalo.Context) error {
+// List gets all Otps. This function is mapped to the path
+// GET /otps
+func (v OtpsResource) List(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	users := &Users{}
+	otps := &Otps{}
 
 	// Paginate results. Params "page" and "per_page" control pagination.
 	// Default values are "page=1" and "per_page=20".
 	q := tx.PaginateFromParams(c.Params())
 
-	// Retrieve all Users from the DB
-	if err := q.All(users); err != nil {
+	// Retrieve all Otps from the DB
+	if err := q.All(otps); err != nil {
 		return err
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(200, actions.R.JSON(users))
+		return c.Render(200, actions.R.JSON(otps))
 	}).Respond(c)
 }
 
-// Show gets the data for one User. This function is mapped to
-// the path GET /users/{user_id}
-func (v UsersResource) Show(c buffalo.Context) error {
+// Show gets the data for one Otp. This function is mapped to
+// the path GET /otps/{otp_id}
+func (v OtpsResource) Show(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Otp
+	otp := &Otp{}
 
-	// To find the User the parameter user_id is used.
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	// To find the Otp the parameter otp_id is used.
+	if err := tx.Find(otp, c.Param("otp_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(200, actions.R.JSON(user))
+		return c.Render(200, actions.R.JSON(otp))
 	}).Respond(c)
 }
 
-// Create adds a User to the DB. This function is mapped to the
-// path POST /users
-func (v UsersResource) Create(c buffalo.Context) error {
-	// Allocate an empty User
-	user := &User{}
+// Create adds a Otp to the DB. This function is mapped to the
+// path POST /otps
+func (v OtpsResource) Create(c buffalo.Context) error {
+	// Allocate an empty Otp
+	otp := &Otp{}
 
-	// Bind user to the html form elements
-	if err := c.Bind(user); err != nil {
+	// Bind otp to the html form elements
+	if err := c.Bind(otp); err != nil {
 		return err
 	}
 
@@ -93,7 +93,7 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	}
 
 	// Validate the data from the html form
-	verrs, err := tx.ValidateAndCreate(user)
+	verrs, err := tx.ValidateAndCreate(otp)
 	if err != nil {
 		return err
 	}
@@ -105,32 +105,32 @@ func (v UsersResource) Create(c buffalo.Context) error {
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusCreated, actions.R.JSON(user))
+		return c.Render(http.StatusCreated, actions.R.JSON(otp))
 	}).Respond(c)
 }
 
-// Update changes a User in the DB. This function is mapped to
-// the path PUT /users/{user_id}
-func (v UsersResource) Update(c buffalo.Context) error {
+// Update changes a Otp in the DB. This function is mapped to
+// the path PUT /otps/{otp_id}
+func (v OtpsResource) Update(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Otp
+	otp := &Otp{}
 
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	if err := tx.Find(otp, c.Param("otp_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
-	// Bind User to the html form elements
-	if err := c.Bind(user); err != nil {
+	// Bind Otp to the html form elements
+	if err := c.Bind(otp); err != nil {
 		return err
 	}
 
-	verrs, err := tx.ValidateAndUpdate(user)
+	verrs, err := tx.ValidateAndUpdate(otp)
 	if err != nil {
 		return err
 	}
@@ -142,32 +142,32 @@ func (v UsersResource) Update(c buffalo.Context) error {
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusOK, actions.R.JSON(user))
+		return c.Render(http.StatusOK, actions.R.JSON(otp))
 	}).Respond(c)
 }
 
-// Destroy deletes a User from the DB. This function is mapped
-// to the path DELETE /users/{user_id}
-func (v UsersResource) Destroy(c buffalo.Context) error {
+// Destroy deletes a Otp from the DB. This function is mapped
+// to the path DELETE /otps/{otp_id}
+func (v OtpsResource) Destroy(c buffalo.Context) error {
 	// Get the DB connection from the context
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
 
-	// Allocate an empty User
-	user := &User{}
+	// Allocate an empty Otp
+	otp := &Otp{}
 
-	// To find the User the parameter user_id is used.
-	if err := tx.Find(user, c.Param("user_id")); err != nil {
+	// To find the Otp the parameter otp_id is used.
+	if err := tx.Find(otp, c.Param("otp_id")); err != nil {
 		return c.Error(http.StatusNotFound, err)
 	}
 
-	if err := tx.Destroy(user); err != nil {
+	if err := tx.Destroy(otp); err != nil {
 		return err
 	}
 
 	return responder.Wants("json", func(c buffalo.Context) error {
-		return c.Render(http.StatusOK, actions.R.JSON(user))
+		return c.Render(http.StatusOK, actions.R.JSON(otp))
 	}).Respond(c)
 }
